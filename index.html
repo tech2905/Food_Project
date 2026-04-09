@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Sales Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">🥐</span>
+        <span class="brand-name">FoodSales</span>
+      </div>
+      <nav class="nav">
+        <a class="nav-item active" href="#">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </a>
+        <a class="nav-item" href="#">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Analytics
+        </a>
+        <a class="nav-item" href="#">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Products
+        </a>
+        <a class="nav-item" href="#">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Regions
+        </a>
+        <a class="nav-item" href="#">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          Settings
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="avatar">AD</div>
+        <div class="user-info">
+          <span class="user-name">Admin</span>
+          <span class="user-role">Manager</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="header">
+        <div>
+          <h1 class="page-title">Overview</h1>
+          <p class="page-sub">Jan 2024 – Dec 2025 &nbsp;·&nbsp; 244 orders</p>
+        </div>
+        <div class="header-actions">
+          <select class="filter-select" id="yearFilter">
+            <option value="all">All Years</option>
+            <option value="2024">2024</option>
+            <option value="2025" selected>2025</option>
+          </select>
+          <button class="export-btn" onclick="exportCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+        </div>
+      </header>
+
+      <!-- Metric Cards -->
+      <section class="metrics">
+        <div class="mcard">
+          <div class="mcard-label">Total Revenue</div>
+          <div class="mcard-value" id="m-revenue">$33,326</div>
+          <div class="mcard-trend up">↑ 2 year total</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-label">Total Orders</div>
+          <div class="mcard-value" id="m-orders">244</div>
+          <div class="mcard-trend up">↑ 4 categories</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-label">Units Sold</div>
+          <div class="mcard-value" id="m-units">15,442</div>
+          <div class="mcard-trend neutral">All products</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-label">Avg Order Value</div>
+          <div class="mcard-value" id="m-aov">$136.58</div>
+          <div class="mcard-trend up">↑ Per order avg</div>
+        </div>
+      </section>
+
+      <!-- Charts Row 1 -->
+      <section class="charts-row">
+        <div class="chart-card wide">
+          <div class="chart-header">
+            <h2>Monthly Revenue</h2>
+            <div class="legend-row">
+              <span class="leg"><span class="leg-dot" style="background:#4f8ef7"></span>2025</span>
+              <span class="leg"><span class="leg-dot" style="background:#c7d8ff"></span>2024</span>
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:220px">
+            <canvas id="lineChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2>By Category</h2>
+          </div>
+          <div class="legend-col">
+            <span class="leg-item"><span class="leg-dot" style="background:#4f8ef7"></span>Cookies <b>51.6%</b></span>
+            <span class="leg-item"><span class="leg-dot" style="background:#34c989"></span>Bars <b>31.6%</b></span>
+            <span class="leg-item"><span class="leg-dot" style="background:#f5a623"></span>Crackers <b>10.0%</b></span>
+            <span class="leg-item"><span class="leg-dot" style="background:#a0aec0"></span>Snacks <b>6.7%</b></span>
+          </div>
+          <div class="chart-wrap" style="height:160px">
+            <canvas id="donutChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts Row 2 -->
+      <section class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header"><h2>Top Products</h2></div>
+          <div class="bar-list" id="productBars"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><h2>Region Split</h2></div>
+          <div class="region-cards">
+            <div class="region-card east">
+              <div class="rc-label">East</div>
+              <div class="rc-value">$21,524</div>
+              <div class="rc-pct">64.6%</div>
+              <div class="rc-cities">Boston · New York</div>
+            </div>
+            <div class="region-card west">
+              <div class="rc-label">West</div>
+              <div class="rc-value">$11,801</div>
+              <div class="rc-pct">35.4%</div>
+              <div class="rc-cities">LA · San Diego</div>
+            </div>
+          </div>
+          <div class="chart-wrap" style="height:110px;margin-top:14px">
+            <canvas id="regionChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><h2>City Revenue</h2></div>
+          <div class="city-grid">
+            <div class="city-card">
+              <div class="city-name">Boston</div>
+              <div class="city-val">$13,266</div>
+              <div class="city-bar"><div class="city-bar-fill" style="width:100%;background:#4f8ef7"></div></div>
+            </div>
+            <div class="city-card">
+              <div class="city-name">New York</div>
+              <div class="city-val">$8,259</div>
+              <div class="city-bar"><div class="city-bar-fill" style="width:62%;background:#4f8ef7"></div></div>
+            </div>
+            <div class="city-card">
+              <div class="city-name">Los Angeles</div>
+              <div class="city-val">$7,687</div>
+              <div class="city-bar"><div class="city-bar-fill" style="width:58%;background:#34c989"></div></div>
+            </div>
+            <div class="city-card">
+              <div class="city-name">San Diego</div>
+              <div class="city-val">$4,114</div>
+              <div class="city-bar"><div class="city-bar-fill" style="width:31%;background:#34c989"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Table -->
+      <section class="table-section">
+        <div class="chart-card full">
+          <div class="chart-header">
+            <h2>Recent Orders</h2>
+            <input class="search-input" type="text" placeholder="Search orders..." id="searchInput" oninput="filterTable()" />
+          </div>
+          <div class="table-wrap">
+            <table id="ordersTable">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Region</th>
+                  <th>City</th>
+                  <th>Category</th>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Unit Price</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
